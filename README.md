@@ -40,3 +40,17 @@ Setup Instructions
 
 To run the project locally:
 	1.	Clone the repository:
+git clone https://github.com/your-username/your-repo-name.git
+	2.	Navigate to the project directory:
+ cd your-repo-name
+ 	3.	Open index.html in your browser.
+  Live Demo
+
+The project is live and can be accessed here : https://kartikdnarayanpur.github.io/EMMETRA_PROJECT/
+Contact
+
+	•	Name: Kartik D Narayanpur
+	•	Email: dnkartik75@gmail.com
+	•	GitHub: kartikdnarayanpur
+
+
