@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clock</title>
+    <style>
+        body {
+            background: tan;
+            padding: 10px 0;
+            background-color: tan;
+            background-repeat: repeat-x;
+            background-position: top center;
+            height: 320px;
+        }
+        .b {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-size: 16px;
+            color: #000;
+            font-family: consolas, monaco, menlo, courier, monospace;
+            border: 0;
+            line-height: normal;
+        }
+        .c {
+            text-align: center;
+            margin: auto;
+        }
+        .ib {
+            display: inline-block;
+        }
+        .circle {
+            height: 300px;
+            width: 300px;
+            border: 10px solid #333;
+            background-color: #ddd;
+            border-radius: 20px;
+            overflow: hidden;
+            display: block;
+            transition: border-radius 0.25s;
+        }
+        .n {
+            position: absolute;
+            width: 280px;
+            height: 22px;    
+            margin-top: 129px;
+            transform-origin: center center;
+            z-index: 2;
+        }
+        .n:nth-child(1) { transform: rotate(-60deg); }
+        .n:nth-child(1) > .tn { transform: rotate(60deg); }
+        .n:nth-child(2) { transform: rotate(-30deg); }
+        .n:nth-child(2) > .tn { transform: rotate(30deg); }
+        .n:nth-child(3) { transform: rotate(0deg); }
+        .n:nth-child(3) > .tn { transform: rotate(0deg); }
+        .n:nth-child(4) { transform: rotate(30deg); }
+        .n:nth-child(4) > .tn { transform: rotate(-30deg); }
+        .n:nth-child(5) { transform: rotate(60deg); }
+        .n:nth-child(5) > .tn { transform: rotate(-60deg); }
+        .n:nth-child(6) { transform: rotate(90deg); }
+        .n:nth-child(6) > .tn { transform: rotate(-90deg); }
+        .tn {
+            float: right;
+            text-shadow: 1px 1px 2px #fff;
+            color: #888;
+            padding: 4px;
+            height: 22px;
+            width: 22px;
+            font-size: 12px;
+            border-radius: 50%;
+            transform-origin: center center;
+        }
+        .tn:first-of-type {
+            float: left;
+        }
+        .needle {
+            position: absolute;
+            height: 4px;
+            background: #333;
+            border-radius: 100% 5px 5px 100%;
+            width: 145px;
+            margin-top: 138px;
+            margin-left: 12px;
+            transform-origin: 128px 50%;
+            background: brown;
+            z-index: 5;
+        }
+        .medium {
+            height: 8px;
+            width: 120px;
+            margin-top: 136px;
+            margin-left: 37px;    
+            background: rosybrown;
+            z-index: 4;
+            transform-origin: 102px 50%;
+        }
+        .short {
+            height: 10px;
+            width: 100px;
+            margin-top: 136px;
+            margin-left: 57px;
+            background: #333;
+            transform-origin: 83px 50%;
+            z-index: 3;
+        }
+        .pivot {
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            border: 4px solid brown;
+            background: #fff;
+            position: relative;
+            float: right;
+            right: 10px;
+            top: -6px;
+            box-shadow: 0 0 4px #000 inset;
+        }
+        .circle:hover {
+            cursor: pointer;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="b c outer">
+        <noscript>
+            <div class="b c" style="color:red;font-size:24px">This clock needs JavaScript</div>
+        </noscript>
+        <div class="b c circle" id="off">        
+            <div class="b n">
+                <span class="b ib tn">7</span>
+                <span class="b ib tn">1</span>
+            </div>
+            <div class="b n">            
+                <span class="b ib tn">8</span>
+                <span class="b ib tn">2</span>
+            </div>
+            <div class="b n">
+                <span class="b ib tn">9</span>
+                <span class="b ib tn">3</span>
+            </div>
+            <div class="b n">
+                <span class="b ib tn">10</span>
+                <span class="b ib tn">4</span>
+            </div>
+            <div class="b n">
+                <span class="b ib tn">11</span>
+                <span class="b ib tn">5</span>
+            </div>
+            <div class="b n">
+                <span class="b ib tn">12</span>
+                <span class="b ib tn">6</span>
+            </div>
+            <div class="b c needle short" id="hour"></div>
+            <div class="b c needle medium" id="minute"></div>
+            <div class="b c needle long" id="second">
+                <div class="b c pivot"></div>
+            </div>
+            <div class="b c br">CLOCK</div>
+        </div>
+        <p class="b c dn" id="note"><small>Click clock to mute.</small></p>    
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(function () {
+            "use strict";
+            var $sec = $("#second");
+            var $min = $("#minute");
+            var $hour = $("#hour");
+            var isMuted = false;
+
+            // Web Audio API for ticking sound
+            var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+            function playTickSound() {
+                var oscillator = audioContext.createOscillator();
+                var gainNode = audioContext.createGain();
+
+                oscillator.type = "sine";
+                oscillator.frequency.setValueAtTime(500, audioContext.currentTime);
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.1); // 100ms duration
+            }
+
+            function getTime() {
+                var today = new Date();
+                var h = today.getHours();
+                var m = today.getMinutes();
+                var s = today.getSeconds();
+                return [h, m, s];
+            }
+
+            function needleAnimation() {
+                var time = getTime();
+                var s_value = time[2] * 6 + 90;
+                var m_value = time[1] * 6 + 90;
+                var h_value = (time[0] % 12) * 30 + 90 + (time[1] / 60) * 30;
+                $sec.css({ transform: "rotate(" + s_value + "deg)" });
+                $min.css({ transform: "rotate(" + m_value + "deg)" });
+                $hour.css({ transform: "rotate(" + h_value + "deg)" });
+
+                // Play ticking sound if not muted
+                if (!isMuted) playTickSound();
+            }
+
+            function toggleMute() {
+                isMuted = !isMuted;
+                if (isMuted) {
+                    $("#off").css({
+                        "background-color": "lightskyblue",
+                        "border-color": "blue"
+                    });
+                    $("#note").html("<small style='color:brown;letter-spacing:1px;font-weight:bold;'>MUTED</small>");
+                } else {
+                    $("#off").css({
+                        "background-color": "#ddd",
+                        "border-color": "#333"
+                    });
+                    $("#note").html("<small>Click clock to mute.</small>");
+                }
+            }
+
+            // Add event listener to toggle mute and change color
+            $("#off").on("click", toggleMute);
+
+            // Start the clock
+            setInterval(needleAnimation, 1000);
+        });
+    </script>
+</body>
+</html>

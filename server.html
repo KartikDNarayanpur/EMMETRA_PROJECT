@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Interactive UI</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="navbar grad">
+    <div class="navbar-left" id="navbar-left">
+      <a href="#"></a>
+    </div>
+    <div class="navbar-right"></div>
+  </nav>
+
+  <div class="hero grad1">
+    <h1>Welcome to Your Interactive UI</h1>
+    <p>“Solve puzzles, unlock levels, and transform the clock. Can you master them all?”</p>
+    <a class="get-started-btn" href="#dou">Get Started</a>
+  </div>
+
+  <div class="container" id="main-content">
+    <div class="tasks" id="dou">
+      <button class="task-button" onclick="startPuzzle1()" id="btn1">Puzzle 1</button>
+      <button class="task-button locked" id="btn2" disabled>Puzzle Locked</button>
+      <button class="task-button locked" id="btn3" disabled>Puzzle Locked</button>
+      <button class="task-button locked" id="btn4" disabled>Puzzle Locked</button>
+    </div>
+    <div class="clock">
+      <iframe src="clock1/clock1.html" frameborder="0" style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+  </div>
+  <div id="confetti-wrapper"></div>
+  
+  <!-- Modal -->
+  <div class="modal" id="modal">
+    <button class="close-btn" onclick="closeModal()">Close</button>
+    <div>Red Page Content</div>
+  </div>
+
+  
+
+  <footer class="footer grad">
+    <h3>Contact Information</h3>
+    <p>Name: Kartik D Narayanpur</p>
+    <p>Email: <a href="mailto:dnkartik75@gmail.com">dnkartik75@gmail.com</a></p>
+    <p>Contact No: 9379560417</p>
+    <p>GitHub: <a href="https://github.com/kartikdnarayanpur" target="_blank">https://github.com/kartikdnarayanpur</a></p>
+    <p>About Us: This interactive UI is designed to provide a seamless user experience.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
