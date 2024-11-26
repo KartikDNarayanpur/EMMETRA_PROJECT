@@ -359,7 +359,7 @@ button[disabled] {
 
 .card.flipped {
   background-color: #5149a8;
-  transform: rotateY(180deg);
+  transform: rotateY(360deg);
 }
 
 .card.matched {
