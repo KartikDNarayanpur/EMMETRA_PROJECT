@@ -709,6 +709,7 @@ function displayWord() {
 
   if (!wordDisplay.includes("_")) {
     // Show celebration modal immediately after completing the word
+      document.getElementById("navbar-left").innerHTML = "<a>All levels completed </a>";
     setTimeout(() => showCelebration(), 500);
   }
 }
